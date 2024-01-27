@@ -10,37 +10,37 @@ export default {
         //get data from server
         const serverdata = ref(null);
         const tabledata = ref(null);
-        onMounted(() => {            
+        onMounted(() => {
             fetch('https://jsonplaceholder.typicode.com/todos')
             .then(response => response.json())
-            .then(data => serverdata.value = data);          
-        })
+            .then(data => serverdata.value = data);
+        });
 
 
         //search
         watchEffect(() => {
             if (serverdata.value) {
                 if (store.searchString) {
-                    tabledata.value = serverdata.value.filter(function (el) {return el.title.includes(store.searchString);  });
-                } else {tabledata.value = serverdata.value};
-            }            
-        })
+                    tabledata.value = serverdata.value.filter(function (el) {return el.title.includes(store.searchString); });
+                } else { tabledata.value = serverdata.value };
+            }
+        });
 
 
         //table sort
         let sortByColumn = ref(null);
         watchEffect(() => {
             if (serverdata.value) {
-                if (!sortByColumn.value && store.sortedColumn) {serverdata.value.sort(functions.sort(store.sortedColumn, store.sortedOrder));}
+                if (!sortByColumn.value && store.sortedColumn) { serverdata.value.sort(functions.sort(store.sortedColumn, store.sortedOrder)); }
                 if (sortByColumn.value == store.sortedColumn) {
-                    if (store.sortedOrder == "asc") {store.sortedOrder = "desc"} else {store.sortedOrder = "asc"}
+                    if (store.sortedOrder == "asc") { store.sortedOrder = "desc"; } else { store.sortedOrder = "asc"; }
                     serverdata.value.sort(functions.sort(sortByColumn.value, store.sortedOrder)); store.sortedColumn = sortByColumn.value;
                 } else {
-                    serverdata.value.sort(functions.sort(sortByColumn.value, "asc")); store.sortedOrder="asc"; store.sortedColumn = sortByColumn.value;                   
+                    serverdata.value.sort(functions.sort(sortByColumn.value, "asc")); store.sortedOrder="asc"; store.sortedColumn = sortByColumn.value;
                 }
-                sortByColumn.value = null;         
+                sortByColumn.value = null;
             }
-        })
+        });
 
 
         return {tabledata, store, sortByColumn}

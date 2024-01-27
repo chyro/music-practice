@@ -22,16 +22,16 @@ export default {
                     if (localStorage.getItem(key)) store[key] = localStorage.getItem(key);
                 }}
             )           
-        })
-        
+        });
+
         //url management
         watchEffect(() => {
             const urlpage = window.location.pathname.split("/").pop();
-            if (page.value == null) {page.value = urlpage}
-            if (page.value != urlpage) {const url = page.value ? page.value : './'; window.history.pushState({url: url}, '', url);                                }
-            window.onpopstate = function() {page.value = window.location.pathname.split("/").pop()}; 
-        })
-        
+            if (page.value == null) { page.value = urlpage; }
+            if (page.value != urlpage) { const url = page.value ? page.value : './'; window.history.pushState({url: url}, '', url); }
+            window.onpopstate = function() { page.value = window.location.pathname.split("/").pop(); };
+        });
+
         return {page, pages}
     },
 
@@ -43,10 +43,11 @@ export default {
                     <button v-on:click="page = index">
                         {{ item.name }}
                     </button>
-                </template>               
+                </template>
             </nav><hr>
         </div>
         <div id="content">
+            <!-- button v-on:click="page = 'readPractice'">Only works when it's on the menu - can't have undeclared subpages this way</button -->
             <component :is="page || 'homepage'"></component>
         </div>
     `,
