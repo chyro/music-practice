@@ -22,9 +22,9 @@ export default {
             // const rendered = ABCJS.renderAbc("*", note); // not sure how to get the generated SVG from that
 
             let key = 'C'; // eventually based on practice settings
-            let testNote = Music.randomPitch(0, 23); // essentially the whole treble clef
+            let testNote = Music.randomNote(0, 23); // essentially the whole treble clef
             // for (let i = -39; i < 49; i++) { testNote += Music.numToAbc(i); } // full piano keyboard, left to right
-            let abcNoteSheet ="X:1\nL:1/4\nK:" + key + "\n" + testNote;
+            let abcNoteSheet ="X:1\nL:1/4\nK:" + key + "\n" + testNote.abc;
             // ABCJS.renderAbc('note-container', sampleNotes[1]);
             ABCJS.renderAbc('note-container', abcNoteSheet);
         };
