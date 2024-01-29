@@ -1,6 +1,6 @@
 import store from '../../store.js';
 // import ABCJS from '../../vendor/abcjs-basic-min.js'
-import Music from '../../lib/music.js';
+import * as Music from '../../lib/music.js';
 
 export default {
     name: 'Read Practice Component',
