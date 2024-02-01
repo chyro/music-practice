@@ -27,6 +27,19 @@ export default {
             let abcNoteSheet ="X:1\nL:1/4\nK:" + key + "\n" + testNote.abc;
             // ABCJS.renderAbc('note-container', sampleNotes[1]);
             ABCJS.renderAbc('note-container', abcNoteSheet);
+
+            // TODO: init elsewhere
+            // TODO: load mp3 files in a sensible place
+            const sampler = new Tone.Sampler(
+                { urls: { "C4": "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", "A4": "A4.mp3" },
+                release: 1, baseUrl: "https://tonejs.github.io/audio/salamander/"}
+            ).toDestination();
+
+            // Tone.loaded().then(() => { sampler.triggerAttackRelease(["Eb4", "G4", "Bb4"], 4); });
+            Tone.loaded().then(() => {
+                sampler.triggerAttackRelease(testNote.spn, '4n', );
+                // sampler.triggerAttackRelease(['C4', 'G4'], '4n', Tone.now() + 1);
+            });
         };
 
         return {store, name, pickRandomNote}; // , $noteContainer};
