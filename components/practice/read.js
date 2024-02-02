@@ -11,18 +11,25 @@ export default {
 
         const name = 'Read Practice Component';
 
-        // const $noteContainer = ref(null);
+        const noteContainer = ref(null);
+        const visualInput = ref(null);
+        let testNote;
 
         onMounted(() => {
-            //$noteContainer.value.innerText = 'Dynamically loaded';
+            visualInput.value.addEventListener('press', keyPressed);
         });
 
-        function pickRandomNote() {
-            // $noteContainer.value.innerText = 'Dynamically loaded'; // could display the SVG here but ~~~~
+        function keyPressed(e) {
+            console.log('piano-keyboard is saying somebody pressed key #' + e.detail.key);
+            console.log('Test note was ' + testNote.num + ' which on a full piano would be key #' + (testNote.num + 40));
+        }
+
+        function pickRandomNote(e) {
+            // noteContainer.value.innerText = 'Dynamically loaded'; // could display the SVG here but ~~~~
             // const rendered = ABCJS.renderAbc("*", note); // not sure how to get the generated SVG from that
 
             let key = 'C'; // eventually based on practice settings
-            let testNote = Music.randomNote(0, 23); // essentially the whole treble clef
+            testNote = Music.randomNote(0, 23); // essentially the whole treble clef
             // for (let i = -39; i < 49; i++) { testNote += Music.numToAbc(i); } // full piano keyboard, left to right
             let abcNoteSheet ="X:1\nL:1/4\nK:" + key + "\n" + testNote.abc;
             // ABCJS.renderAbc('note-container', sampleNotes[1]);
@@ -42,7 +49,16 @@ export default {
             });
         };
 
-        return {store, name, pickRandomNote}; // , $noteContainer};
+        return {
+            // libs
+            store,
+            // vars
+            name, testNote,
+            // listeners
+            pickRandomNote, keyPressed,
+            // refs
+            noteContainer, visualInput
+        };
     },
 
 
@@ -52,11 +68,11 @@ export default {
         <div class="question">
             <!-- div v-if="note">{{ ABCJS.renderAbc("*", note) }}</div -->
             <div id="note-container"></div>
-            <div ref="$noteContainer" class="note-container"></div>
+            <div ref="noteContainer" id="note-container"></div>
         </div>
         <div class="answer">
             <p>TODO: display keyboard as webcomponent, event listener checking, generate next</p>
-            <piano-keyboard from=1 to=88></piano-keyboard>
+            <piano-keyboard ref="visualInput" from=1 to=88 interactive=1></piano-keyboard>
             <p>TODO also: detect midi input</p>
             <button v-on:click="pickRandomNote">Click</button>
         </div>
