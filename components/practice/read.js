@@ -56,6 +56,7 @@ export default {
         </div>
         <div class="answer">
             <p>TODO: display keyboard as webcomponent, event listener checking, generate next</p>
+            <piano-keyboard from=1 to=88></piano-keyboard>
             <p>TODO also: detect midi input</p>
             <button v-on:click="pickRandomNote">Click</button>
         </div>
