@@ -5,6 +5,7 @@ import page4 from './page4.js';
 import readPractice from './practice/read.js';
 import listenPractice from './practice/listen.js';
 import playPractice from './practice/play.js';
+import practice from './practice.js';
 
 export {
     page1,
@@ -15,6 +16,7 @@ export {
     readPractice,
     listenPractice,
     playPractice,
+    practice,
     // and then... status? stats?
     // also a login page which would take credentials and load $progress from an online DB?
     // so status page needs to show login status, and a note that if you want to keep your progress between devices you need to enter an identifier
