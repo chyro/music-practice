@@ -30,6 +30,14 @@
     createApp(app).mount('#app');
 </script>
 
+<style>
+/* app */
+#sidebar { padding-bottom: 5px; border-bottom: 1px solid grey; margin-bottom: 5px; display: flex; }
+
+/* components/tonejs-status */
+.led { display: inline-block; min-width: 15px; min-height: 15px; aspect-ratio: 1/1; border-radius: 50%; border: 2px solid silver; background-color: #f33; box-shadow: rgba(0, 0, 0, 0.2) 0 0 5px, inset #808002 0 0 5px, #ff0 0 0; }
+.led.on { background-color: #3f3; }
+</style>
 </body>
 </html>
 
