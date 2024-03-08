@@ -2,6 +2,9 @@ import homepage from './pages/home.js'
 import practice from './pages/practice.js'
 import * as pages from './pages/index.js'
 import TonejsStatus from './components/tonejs-status.js'
+import MidiStatus from './components/midi-status.js'
+import MusicInput from './lib/Music/input.js'
+import MusicOutput from './lib/Music/output.js'
 import store from './store.js'
 
 export default {
@@ -9,11 +12,16 @@ export default {
     components: Object.assign({homepage, practice, TonejsStatus}, pages),
 
     setup() {
-        const {onMounted, provide, ref, watchEffect} = Vue;
+        const {onMounted, provide, ref, shallowRef, watchEffect} = Vue;
         const page = ref(null);
 
         const sampler = ref(null);
-        provide('sampler', sampler); // MAYBE: this should pass a SoundManager wrapper class, so the rest of the code can mindlessly call "SoundManager.play('C5')" without caring?
+        provide('sampler', sampler); // TODO: remove this, replace tonejs-status with output-status
+
+        const musicInput = ref(new MusicInput);
+        provide('music-input', musicInput);
+        const musicOutput = shallowRef(new MusicOutput);
+        provide('music-output', musicOutput);
 
         onMounted(() => {
             //store management: save $variables to localstorage
@@ -42,7 +50,10 @@ export default {
                 const loadingSampler = new Tone.Sampler({
                     urls: { "C4": "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", "A4": "A4.mp3" },
                     release: 1, baseUrl: "https://tonejs.github.io/audio/salamander/",
-                    onload: () => { sampler.value = loadingSampler; }, // maybe: triggerRef(sampler);
+                    onload: () => {
+                        sampler.value = loadingSampler; // maybe: triggerRef(sampler);
+                        musicOutput.value.registerToneJSSampler(loadingSampler);
+                    },
                 }).toDestination();
             }
         });
@@ -62,6 +73,7 @@ export default {
             </nav>
             <div class="status">
                 <TonejsStatus/>
+                <MidiStatus/>
             </div>
         </div>
         <div id="content">

@@ -1,24 +1,25 @@
 // import store from '../store.js';
 // import {Math2, Memory, Note} from '../lib/music.js';
+// TODO: import MidiInput from '../lib/Music/midi-input.js';
 
 // MAYBE: extend from StatusMonitor?
 
 export default {
-    name: 'ToneJS status monitor',
+    name: 'Midi input status monitor',
 
 
     setup(props) {
         const {inject, onMounted, ref, watchEffect} = Vue;
 
-        const sampler = inject('sampler'); // TODO: use MusicOutput instead
+        // const sampler = inject('sampler');
         let available = ref(false);
 
         onMounted(() => {
-            // Should I create a timer to regularly check the status of the sampler? Would it ever go away or break?
+            // Should I create a timer to regularly check the status of midi devices?
         });
 
         watchEffect(() => {
-            available.value = sampler.value?.loaded;
+            available.value = false; // ???
         });
 
         return {
@@ -37,7 +38,7 @@ export default {
 
 
     template: `
-        <div class="tonejs-status-monitor" :title="'ToneJS status: ' + (available ? 'on' : 'off')">
+        <div class="midi-status-monitor" :title="'Midi status: ' + (available ? 'on' : 'off')">
             <div class="led" :class="{on: available}"></div>
         </div>
     `,

@@ -22,7 +22,7 @@ export default {
     },
 
     setup(props) {
-        const {watchEffect, onMounted, ref} = Vue;
+        const {inject, onMounted, ref, watchEffect} = Vue;
 
         const noteReadContainer = ref(null);
         const visualInput = ref(null);
@@ -48,11 +48,12 @@ export default {
         const exerciseType = ref(null); // calculated
 
         let notePicker = Math2.getRandomRotator({});
-        let toneSampler = window.toneSampler;
+        const musicInput = inject('music-input');
+        const musicOutput = inject('music-output');
 
         onMounted(() => {
-            visualInput.value.addEventListener('press', keyPressed);
-            // TODO: register for inputs from MIDI (and unregister on unmount probably)
+            musicInput.value.registerOnScreenKeyboard(visualInput.value);
+            musicInput.value.addEventListener('pressed-key', keyPressed);
 
             loadParams(props.params);
         });
@@ -74,14 +75,12 @@ export default {
         function keyPressed(e) {
             if (!testNote) return; // no active question: ignore
 
-            const questionKey = testNote.pianoKey;
-            const answerKey = e.detail.key;
-            console.log('piano-keyboard is saying somebody pressed key #' + answerKey + ', test note was ' + questionKey);
-            if (answerKey == questionKey) {
-                Memory.registerCorrect(exerciseType, questionKey); // TODO: also note the time taken to answer
+            console.log('piano-keyboard is saying somebody pressed key #' + e.detail.note.pianoKey + ', test note was ' + testNote.pianoKey);
+            if (testNote.equals(e.detail.note)) {
+                Memory.registerCorrect(exerciseType, testNote); // TODO: also note the time taken to answer
                 pickRandomNote();
             } else {
-                Memory.registerError(exerciseType, questionKey, answerKey);
+                Memory.registerError(exerciseType, testNote, e.detail.note);
             }
         }
 
@@ -98,21 +97,19 @@ export default {
             }
 
             if (prompt.value == 'listen') {
-                playNote();
+                musicOutput.value.playNotes([testNote]);
             }
         };
 
         function playNote() {
-            if (!testNote) return;
-            // e.g. sampler.triggerAttackRelease(['C4', 'G4'], '4n', Tone.now() + 1);
-            window.toneSampler.triggerAttackRelease(testNote.spn, '4n');
-        }
+            musicOutput.value.playNotes([testNote]);
+        };
 
         return {
             // libs
             store,
             // vars
-            keyRange, prompt, toneSampler, // name, testNote, keyRange, prompt, notePicker,
+            keyRange, prompt, musicOutput, // name, testNote, keyRange, prompt, notePicker,
             // listeners
             pickRandomNote, playNote, // keyPressed,
             // helpers
@@ -132,7 +129,8 @@ export default {
         </div>
         <div class="answer">
             <piano-keyboard ref="visualInput" :from="keyRange[0]" :to="keyRange[1]" interactive=1></piano-keyboard>
-            <button :disabled="toneSampler == null" v-on:click="pickRandomNote">Start (display a random note)</button>
+            <button v-on:click="pickRandomNote">Start (display a random note)</button>
+            <!-- maybe: :disabled="!musicOutput.hasValidOutput()" -->
         </div>
       </div>
     `,
