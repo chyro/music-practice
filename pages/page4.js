@@ -4,7 +4,7 @@ export default {
     name: 'Page4',
     components: {component4},
 
-    setup() {        
+    setup() {
         const {ref} = Vue;
         const title = 'Page Four'
         const msgToChild = ref(null)
@@ -27,7 +27,7 @@ export default {
     template: `
         <div>
             <p>{{ title }}</p>
-            <button v-on:click="newMsg()">Send message to child</button><br>           
+            <button v-on:click="newMsg()">Send message to child</button><br>
             <p>Message from child: {{msgFromChild}}</p>
             <br>
             <component4 :msgProp="msgToChild" @msgEmit='showMsg'></component4>

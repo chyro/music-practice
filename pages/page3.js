@@ -15,4 +15,4 @@ export default {
             <component3></component3>
         </div>
     `,
-  };
+};

@@ -4,7 +4,7 @@ export default {
     name: 'Page1',
     components: {component1},
 
-    setup() {        
+    setup() {
         const title = 'Page One'
         return {title}
     },

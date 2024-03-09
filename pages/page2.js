@@ -20,4 +20,4 @@ export default {
             <component2 :message="msg"></component2>
         </div>
     `,
-  };
+};
