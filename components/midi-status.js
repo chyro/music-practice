@@ -31,7 +31,7 @@ export default {
             //???
             // helpers
             //???
-            // refs
+            // DOM refs
             //???
         };
     },

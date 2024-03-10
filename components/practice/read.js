@@ -76,7 +76,7 @@ export default {
             name, exerciseType, testNote, keyRange, notePicker,
             // listeners
             pickRandomNote, keyPressed,
-            // refs
+            // DOM refs
             noteContainer, visualInput
         };
     },

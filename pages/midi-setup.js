@@ -1,8 +1,11 @@
 import MidiInput from '../lib/Music/midi-input.js'
-import {getUniqueDoodlePath} from '../lib/unique-doodle.js'
+// import {getUniqueDoodlePath} from '../lib/unique-doodle.js'
+import StringIcon from '../components/string-icon.js'
 
 export default {
     name: 'Midi setup',
+
+    components: {StringIcon},
 
     setup() {
         const {inject, ref, toRaw, triggerRef} = Vue;
@@ -50,10 +53,10 @@ export default {
 
         return {
             // libs
-            getUniqueDoodlePath,
+            // getUniqueDoodlePath,
             // vars
             title, midiDevices,
-            // refs
+            // DOM refs
             // practiceType, keyboardRangeOption, keySignature,
             // functions
             scanMidi, selectMidiInput, unselectMidiInput,
@@ -74,7 +77,9 @@ export default {
                     </tr>
                     <template v-for="device, index in midiDevices" key="device.id">
                         <tr :class=" device.status + (device.selected ? ' selected' : '')">
-                            <td><svg fill="none" width=40 height=40 viewbox="0 0 40 40" stroke="black"><path :d="getUniqueDoodlePath(device.id)"/></svg></td>
+                            <!-- td><svg fill="none" width=40 height=40 viewbox="0 0 40 40" stroke="black"><path :d="getUniqueDoodlePath(device.id)"/></svg></td -->
+                            <!-- td><StringIcon :width=80 :height=20 :string="device.id"/></td -->
+                            <td><StringIcon :string="device.id"/></td>
                             <td>{{ device.name }}</td>
                             <td>{{ device.status ? 'online' : 'offline' }}</td>
                             <td>

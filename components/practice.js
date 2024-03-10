@@ -114,7 +114,7 @@ export default {
             pickRandomNote, playNote, // keyPressed,
             // helpers
             loadParams,
-            // refs
+            // DOM refs
             noteReadContainer, visualInput
         };
     },
