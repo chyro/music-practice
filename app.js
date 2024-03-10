@@ -1,5 +1,6 @@
 import homepage from './pages/home.js'
 import practice from './pages/practice.js'
+import midiSetup from './pages/midi-setup.js'
 import * as pages from './pages/index.js'
 import TonejsStatus from './components/tonejs-status.js'
 import MidiStatus from './components/midi-status.js'
@@ -9,7 +10,7 @@ import store from './store.js'
 
 export default {
     name: 'App',
-    components: Object.assign({homepage, practice, TonejsStatus}, pages),
+    components: Object.assign({homepage, practice, midiSetup, MidiStatus, TonejsStatus}, pages),
 
     setup() {
         const {onMounted, provide, ref, shallowRef, watchEffect} = Vue;
@@ -73,7 +74,7 @@ export default {
             </nav>
             <div class="status">
                 <TonejsStatus/>
-                <MidiStatus/>
+                <MidiStatus v-on:click="page = 'midiSetup'"/>
             </div>
         </div>
         <div id="content">
