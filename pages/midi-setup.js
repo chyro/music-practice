@@ -8,7 +8,7 @@ export default {
     components: {StringIcon},
 
     setup() {
-        const {inject, ref, toRaw, triggerRef} = Vue;
+        const {inject, onMounted, ref} = Vue;
 
         const title = 'Midi setup page';
 
@@ -21,34 +21,27 @@ export default {
 
         const midiDevices = ref({});
 
-        function selectMidiInput(deviceId) {
-            unselectMidiInput();
-            midiDevices.value[deviceId].selected = true;
+        onMounted(() => {
+            // midiInput.scanMidi().then((res) => { midiDevices.value = res; });
+            midiInput.addEventListener('state-change', updateMidiDisplay);
+            updateMidiDisplay();
+        });
+
+        function updateMidiDisplay() {
+            midiDevices.value = midiInput.getKnownMidiInputs();
         }
-        function unselectMidiInput() {
-            // TODO: for each midiDevices.value, set .selected to false
+
+        function selectMidiInput(deviceId) {
+            midiInput.markAsUsed(deviceId);
+            updateMidiDisplay();
+        }
+        function unselectMidiInput(deviceId) {
+            midiInput.markAsNotUsed(deviceId);
+            updateMidiDisplay();
         };
         async function scanMidi() {
             // Maybe: set a loading wheel?
-            const localMidiDevices = toRaw(midiDevices.value);
-            for (const midiId in localMidiDevices) {
-                localMidiDevices[midiId].status = 'offline';
-            }
-
-            const midiInputs = await midiInput.getMidiInputs();
-            for (const midiId in midiInputs) {
-                if (!localMidiDevices.hasOwnProperty(midiId)) {
-                    localMidiDevices[midiId] = {
-                        id: midiId,
-                        name: midiInputs[midiId].name,
-                        selected: false,
-                    };
-                }
-                localMidiDevices[midiId].status = 'online';
-            }
-
-            midiDevices.value = localMidiDevices;
-            triggerRef(midiDevices);
+            midiInput.scanMidi();
         }
 
         return {
@@ -81,10 +74,10 @@ export default {
                             <!-- td><StringIcon :width=80 :height=20 :string="device.id"/></td -->
                             <td><StringIcon :string="device.id"/></td>
                             <td>{{ device.name }}</td>
-                            <td>{{ device.status ? 'online' : 'offline' }}</td>
+                            <td>{{ device.status }}</td>
                             <td>
-                                <button v-if="device.selected" v-on:click="unselectMidiInput">selected - click to unselected</button>
-                                <button v-if="!device.selected" v-on:click="selectMidiInput(device.id)">click to select</button>
+                                <button v-if="device.useIfAvailable" v-on:click="unselectMidiInput(device.id)">selected - click to unselected</button>
+                                <button v-if="!device.useIfAvailable" v-on:click="selectMidiInput(device.id)">click to select</button>
                             </td>
                         </tr>
                     </template>

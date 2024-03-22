@@ -28,14 +28,14 @@ export default {
             //store management: save $variables to localstorage
             window.addEventListener('beforeunload', () => {
                 Object.keys(store).forEach(function (key){
-                    if (key.charAt(0) == "$") {localStorage.setItem(key, store[key]); } else {localStorage.removeItem("$" + key);}
+                    if (key.charAt(0) == "$") { localStorage.setItem(key, store[key]); } else { localStorage.removeItem("$" + key); }
                 });
             });
-            Object.keys(store).forEach(function (key){
+            Object.keys(store).forEach(function (key) {
                 if (key.charAt(0) == "$") {
                     if (localStorage.getItem(key)) store[key] = localStorage.getItem(key);
-                }}
-            );
+                }
+            });
         });
 
         //url management
