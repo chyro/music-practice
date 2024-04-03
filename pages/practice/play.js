@@ -12,7 +12,7 @@ export default {
     template: `
         <div>
             {{ title }}
-            <component1></component1>
+            to do
         </div>
     `,
 };

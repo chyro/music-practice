@@ -33,10 +33,18 @@
 <style>
 /* app */
 #sidebar { padding-bottom: 5px; border-bottom: 1px solid grey; margin-bottom: 5px; display: flex; }
+#sidebar nav { flex-grow: 1; }
 
 /* components/tonejs-status */
 .led { display: inline-block; min-width: 15px; min-height: 15px; aspect-ratio: 1/1; border-radius: 50%; border: 2px solid silver; background-color: #f33; box-shadow: rgba(0, 0, 0, 0.2) 0 0 5px, inset #808002 0 0 5px, #ff0 0 0; }
 .led.on { background-color: #3f3; }
+
+/* components/dean-recommendations.js */
+.dr a { cursor: pointer; :hover { text-decoration: underscore; } }
+
+/* components/midi-status.js */
+.msm { cursor: pointer; } /* technically since the click handler is in the app the style should be linked to a class added by the app, not one from the component... */
+
 </style>
 </body>
 </html>

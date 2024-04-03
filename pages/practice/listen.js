@@ -1,4 +1,4 @@
-import component1 from '../../components/component1.js';
+// import component1 from '../../components/component1.js';
 
 export default {
     name: 'Listen',
@@ -12,7 +12,7 @@ export default {
     template: `
         <div>
             {{ title }}
-            <component1></component1>
+            to do
         </div>
     `,
 };

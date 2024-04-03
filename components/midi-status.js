@@ -38,7 +38,7 @@ export default {
 
 
     template: `
-        <div class="midi-status-monitor" :title="'Midi status: ' + (available ? 'on' : 'off')">
+        <div class="midi-status-monitor msm" :title="'Midi status: ' + (available ? 'on' : 'off')">
             <div class="led" :class="{on: available}"></div>
         </div>
     `,

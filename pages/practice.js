@@ -1,51 +1,54 @@
-import practiceComponent from '../../components/practice.js';
+import * as practiceComponents from '../components/index-practice-components.js'
 
+/**
+ * Base page for practice session
+ * linked to by the dean's recommendations etc
+ * loads the requested practice component, and passes it the requested parameters
+ *
+ * TODO: report the results I suppose? or are the results too intricate, and the practice component should do that? also maybe result reporting should be ongoing rather than once at the end, at least sometimes?
+ */
 export default {
-    name: 'Customizable Practice Page',
-    components: {practiceComponent},
+    name: 'Practice Page',
+    components: practiceComponents,
 
-    setup() {
-        const {watchEffect, onMounted, ref} = Vue;
+    props: {
+        component: String,
+        params: Object,
+        /* e.g. {component: 'practice', params: {prompt: 'listen'}} */
+    },
 
-        const title = 'Customizable practice';
-        const practiceType = ref('read');
-        const keySignature = ref('C');
-        const keyboardRangeOption = ref('1-88');
-        let keyboardRange = [1, 88];
+    setup(props) {
+        // const {} = Vue;
 
-        const practiceParams = ref(null);
-
-        function resetPractice(e) {
-            practiceParams.value = {
-                prompt: practiceType.value,
-                keySignature: keySignature.value,
-                keyRange: keyboardRange,
-                // notesToPractice: Array, // TODO
-            };
+        let practiceComponent = 'practice'; // meaningful default
+        let practiceParams = {};
+        if (props && props.hasOwnProperty('params') && props.params) {
+            if (props.params.hasOwnProperty('component')) {
+                practiceComponent = props.params.component;
+            }
+            if (props.params.hasOwnProperty('params')) {
+                practiceParams = props.params.params;
+            }
         }
 
-        watchEffect(() => {
-            keyboardRange = keyboardRangeOption.value.split('-');
-        });
-
         return {
+            // libs
+            //???
             // vars
-            title, keyboardRange, practiceParams,
-            // refs
-            practiceType, keyboardRangeOption, keySignature,
-            // functions
-            resetPractice
+            practiceComponent, practiceParams
+            // listeners
+            //???
+            // helpers
+            //???
+            // DOM refs
+            //???
         };
     },
 
     template: `
         <div>
-            {{ title }}
-            <p>Practice type: <input type="radio" v-model="practiceType" value="read"> Read <input type="radio" v-model="practiceType" value="listen"> Listen</p>
-            <p>Key signature: <input type="radio" v-model="keySignature" value="C"> C <input type="radio" v-model="keySignature" value="G"> G <input type="radio" v-model="keySignature" value="Cm"> Cm</p>
-            <p>Keyboard range: <input type="radio" v-model="keyboardRangeOption" value="1-88"> full width <input type="radio" v-model="keyboardRangeOption" value="15-64"> small piano <input type="radio" v-model="keyboardRangeOption" value="35-60"> right hand only <input type="radio" v-model="keyboardRangeOption" value="20-45"> left hand only</p>
-            <button v-on:click="resetPractice">Load selected settings</button>
-            <practiceComponent :params="practiceParams"></practiceComponent>
+            Practice page
+            <component :is="practiceComponent" :params="practiceParams"></component>
         </div>
     `,
 };

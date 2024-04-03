@@ -1,5 +1,5 @@
 import homepage from './pages/home.js'
-import practice from './pages/practice.js'
+import customPractice from './pages/custom-practice.js'
 import midiSetup from './pages/midi-setup.js'
 import * as pages from './pages/index.js'
 import TonejsStatus from './components/tonejs-status.js'
@@ -10,11 +10,15 @@ import store from './store.js'
 
 export default {
     name: 'App',
-    components: Object.assign({homepage, practice, midiSetup, MidiStatus, TonejsStatus}, pages),
+    components: Object.assign({homepage, customPractice, midiSetup, MidiStatus, TonejsStatus}, pages),
 
     setup() {
         const {onMounted, provide, ref, shallowRef, watchEffect} = Vue;
         const page = ref(null);
+        const pageParams = ref(null);
+
+        // so children (pages, contained components) can navigate if needed
+        provide('navigator', {navigate: function (targetPage, targetParams = {}) { page.value = targetPage; pageParams.value = targetParams; }});
 
         const sampler = ref(null);
         provide('sampler', sampler); // TODO: remove this, replace tonejs-status with output-status
@@ -59,7 +63,7 @@ export default {
             }
         });
 
-        return {page, pages}
+        return {page, pageParams, pages};
     },
 
     template: `
@@ -79,7 +83,7 @@ export default {
         </div>
         <div id="content">
             <!-- button v-on:click="page = 'readPractice'">Only works when it's on the menu - can't have undeclared subpages this way</button -->
-            <component :is="page || 'homepage'"></component>
+            <component :is="page || 'homepage'" :params="pageParams"></component>
         </div>
     `,
 };
