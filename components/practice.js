@@ -22,7 +22,7 @@ export default {
     },
 
     setup(props) {
-        const {inject, onMounted, ref, watchEffect} = Vue;
+        const {onBeforeUnmount, inject, onMounted, ref, watchEffect} = Vue;
 
         const noteReadContainer = ref(null);
         const visualInput = ref(null);
@@ -58,6 +58,13 @@ export default {
             loadParams(props.params);
         });
 
+        onBeforeUnmount(() => {
+            musicInput.value.unregisterOnScreenKeyboard(visualInput.value);
+            musicInput.value.removeEventListener('pressed-key', keyPressed);
+
+            // Anything else? Reporting statistics maybe?
+        });
+
         watchEffect(() => {
             exerciseType.value = prompt.value + ' practice';
             notePicker = Math2.getRandomRotator(notesToPractice.value);
@@ -75,10 +82,15 @@ export default {
         function keyPressed(e) {
             if (!testNote) return; // no active question: ignore
 
+            musicOutput.value.playNotes([Note.fromPianoKey(e.detail.note.pianoKey)]);
+
             console.log('piano-keyboard is saying somebody pressed key #' + e.detail.note.pianoKey + ', test note was ' + testNote.pianoKey);
-            if (testNote.equals(e.detail.note)) {
+            if (testNote.equals(e.detail.note)) { // correct! moving on
                 Memory.registerCorrect(exerciseType, testNote); // TODO: also note the time taken to answer
-                pickRandomNote();
+
+                // small delay before showing the next question
+                new Promise(r => setTimeout(r, 2000)).then(pickRandomNote);
+                // inspired by https://stackoverflow.com/a/39914235
             } else {
                 Memory.registerError(exerciseType, testNote, e.detail.note);
             }
