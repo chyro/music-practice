@@ -4,6 +4,7 @@ import midiSetup from './pages/midi-setup.js'
 import * as pages from './pages/index.js'
 import TonejsStatus from './components/tonejs-status.js'
 import MidiStatus from './components/midi-status.js'
+import MidiInput from './lib/Music/midi-input.js'
 import MusicInput from './lib/Music/input.js'
 import MusicOutput from './lib/Music/output.js'
 import store from './store.js'
@@ -24,6 +25,8 @@ export default {
         provide('sampler', sampler); // TODO: remove this, replace tonejs-status with output-status
 
         const musicInput = ref(new MusicInput);
+        const midiInput = MidiInput.getMidiInputSingleton();
+        musicInput.value.registerMidiKeyboard(midiInput);
         provide('music-input', musicInput);
         const musicOutput = shallowRef(new MusicOutput);
         provide('music-output', musicOutput);

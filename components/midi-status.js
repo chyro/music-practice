@@ -1,6 +1,6 @@
 // import store from '../store.js';
 // import {Math2, Memory, Note} from '../lib/music.js';
-// TODO: import MidiInput from '../lib/Music/midi-input.js';
+import MidiInput from '../lib/Music/midi-input.js';
 
 // MAYBE: extend from StatusMonitor?
 
@@ -9,18 +9,29 @@ export default {
 
 
     setup(props) {
-        const {inject, onMounted, ref, watchEffect} = Vue;
+        const {onBeforeUnmount, onMounted, ref} = Vue;
+
+        const midiInput = MidiInput.getMidiInputSingleton();
 
         // const sampler = inject('sampler');
         let available = ref(false);
 
         onMounted(() => {
+            midiInput.addEventListener('state-change', stateChanged);
             // Should I create a timer to regularly check the status of midi devices?
         });
 
-        watchEffect(() => {
-            available.value = false; // ???
+        onBeforeUnmount(() => {
+            midiInput.removeEventListener('state-change', stateChanged);
         });
+
+        function stateChanged() {
+            available.value = midiInput.hasActiveDevices();
+        }
+
+        /*watchEffect(() => {
+            available.value = false; // ???
+        });*/
 
         return {
             // libs
