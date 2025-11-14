@@ -33,10 +33,14 @@ export default {
             keySignature: 'C',
             notesToPractice: {},
             prompt: 'read',
+            clef: 'default',
         };
-        if (Object.keys({}).length == 0) { // sane default
-            for (let i of Array(24).keys()) defaultParams.notesToPractice[i + 40] = 5; // essentially the whole treble clef - all notes equally likely to come up
+        /*
+        if (Object.keys(defaultParams.notesToPractice).length == 0) {
+            // sane default: essentially the whole treble clef, all notes equally likely to come up.
+            for (let i of Array(24).keys()) defaultParams.notesToPractice[i + 40] = 5;
         }
+        */
 
         /**
          * Practice settings
@@ -44,6 +48,7 @@ export default {
         const keySignature = ref(defaultParams.keySignature);
         const keyRange = ref(defaultParams.keyRange);
         const notesToPractice = ref(defaultParams.notesToPractice);
+        const clef = ref(defaultParams.clef);
         const prompt = ref(defaultParams.prompt);
         const exerciseType = ref(null); // calculated
 
@@ -75,8 +80,16 @@ export default {
             // console.log({defaultParams, attrParams, params});
             keySignature.value = params.keySignature;
             keyRange.value = params.keyRange;
-            notesToPractice.value = params.notesToPractice;
+            notesToPractice.value = {...params.notesToPractice};
+            clef.value = params.clef;
             prompt.value = params.prompt;
+
+            if (Object.keys(notesToPractice.value).length == 0) {
+                const lowEnd = params.clef == 'bass' ? 20 : 40;
+                // 40~64 is essentially the whole treble clef, 20~44 is essentially the whole bass key. All notes equally likely to come up.
+                for (let i of Array(24).keys()) notesToPractice.value[i + lowEnd] = 5;
+            }
+            notePicker = Math2.getRandomRotator(notesToPractice.value);
         }
 
         function keyPressed(e) {
@@ -104,7 +117,8 @@ export default {
             testNote = Note.fromPianoKey(testNote);
 
             if (prompt.value == 'read') {
-                let abcNoteSheet ="X:1\nL:1/4\nK:" + keySignature + "\n" + testNote.abc;
+                const clefSignature = clef.value != 'default' ? keySignature.value + " " + "clef=" + clef.value : keySignature.value;
+                let abcNoteSheet ="X:1\nL:1/4\nK:" + clefSignature + "\n" + testNote.abc;
                 ABCJS.renderAbc('note-read-container', abcNoteSheet);
             }
 
