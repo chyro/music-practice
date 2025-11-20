@@ -1,4 +1,4 @@
-import deanRecommendation from '../../components/dean-recommendation.js';
+import deanRecommendation from '../components/dean-recommendation.js';
 
 export default {
     name: 'Home',

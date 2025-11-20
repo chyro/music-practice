@@ -1,4 +1,4 @@
-import practiceComponent from '../../components/practice.js';
+import practiceComponent from '../components/practice.js';
 
 export default {
     name: 'Customizable Practice Page',
